@@ -1,0 +1,6 @@
+*.suo
+.nuget/
+*.nupkg
+Nuception/obj/*
+Nuception/bin/*
+*.user
