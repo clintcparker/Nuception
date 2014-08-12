@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Nuception</id>
+    <version>1.0.0</version>
+    <authors>Clinton Parker</authors>
+    <owners>MINDBODY</owners>
+    <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>
+    <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
+    <iconUrl>https://www.mindbodyonline.com/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A bootstrapper for NuGet packages</description>
+    <releaseNotes>First release</releaseNotes>
+    <copyright>Copyright 2014</copyright>
+    <tags>Nuget nuspec bootstrapper setup install init uninstall transform transforms xdt config install.config uninstall.config package packages MINDBODY</tags>
+	<developmentDependency>true</developmentDependency>
+  </metadata>
+  <files>
+	<!--Scripts & Transforms & Files-->
+	<file src="tools\**\*.*" target="tools" exclude="**\*.log" />
+	<file src="content\**\*.*" target="content" />
+  </files>
+</package>
