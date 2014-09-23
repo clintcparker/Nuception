@@ -5,8 +5,6 @@
     <version>1.0.0</version>
     <authors>Clinton Parker</authors>
     <owners>MINDBODY</owners>
-    <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>
-    <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
     <iconUrl>https://www.mindbodyonline.com/favicon.ico</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A bootstrapper for NuGet packages</description>
