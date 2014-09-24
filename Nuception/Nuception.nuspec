@@ -2,9 +2,10 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Nuception</id>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <authors>Clinton Parker</authors>
     <owners>MINDBODY</owners>
+	<projectUrl>https://github.com/clintcparker/Nuception</projectUrl>
     <iconUrl>https://www.mindbodyonline.com/favicon.ico</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A bootstrapper for NuGet packages</description>
