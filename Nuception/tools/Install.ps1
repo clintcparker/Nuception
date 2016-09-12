@@ -27,13 +27,26 @@ MarkDirectoryAsCopyToOutputRecursive($project.ProjectItems.Item("nuget_content")
 MarkDirectoryAsCopyToOutputRecursive($project.ProjectItems.Item("nuget_tools"))
 
 #rename the xdts (they can't be "xdt" because NuGet will execute them
-$project.ProjectItems.Item("nuget_content").ProjectItems | Foreach-Object { if ($_.Name -match "nugetxdt"){$_.Name = ($_.Name.Replace("nugetxdt","xdt"))}}
+$project.ProjectItems.Item("nuget_content").ProjectItems | Foreach-Object { 
+	if ($_.Name -match "nugetxdt"){
+		$_.Name = ($_.Name.Replace("nugetxdt","xdt"))
+	}
+}
 
 #copy XML to output
-$project.ConfigurationManager | Foreach-Object {if ($_.ConfigurationName -match "Release"){ $_.Properties.Item("DocumentationFile").Value = $("bin\Release\" + $project.ProjectName + ".xml")}}
+$project.ConfigurationManager | Foreach-Object {
+	if ($_.ConfigurationName -match "Release"){ 
+		$_.Properties.Item("DocumentationFile").Value = $("bin\Release\" + $project.ProjectName + ".xml")
+	}
+}
 
 #rename the nuspec file
-$project.ProjectItems | Foreach-Object { if ($_.Name -match "Nuception_Template.nuspec"){$_.Name = ($_.Name.Replace("Nuception_Template",$project.ProjectName))}}
+$project.ProjectItems | Foreach-Object { 
+	if ($_.Name -match "Nuception_Template.nuspec"){ 
+		$_.Name = ($_.Name.Replace("Nuception_Template",$project.ProjectName));
+		MarkFileASCopyToOutputDirectory($_);
+	}
+}
 
 
 $dte.ItemOperations.OpenFile($toolsPath + '\README.Nuception.txt')
