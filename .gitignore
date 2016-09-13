@@ -5,3 +5,6 @@ Nuception/obj/*
 Nuception/bin/*
 *.user
 /_ReSharper.Nuception
+/NuceptionEx/obj/Debug
+/NuceptionEx/bin/Debug
+/packages
