@@ -1,5 +1,6 @@
-# Nuception
-A NuGet package to help make NuGet packages.
+# NuceptionEx
+A NuGet (and now a VS extension) package to help make NuGet packages.
+
 
 
 ## Why

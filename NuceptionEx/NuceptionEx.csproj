@@ -56,6 +56,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Icon.png" />
+    <Content Include="Resources\Preview.png" />
+    <Content Include="..\LICENSE">
+      <Link>Resources\LICENSE</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="Key.snk" />
     <None Include="packages.config" />
     <Content Include="Resources\nuget_resources\Nuception_Template.nuspec">
