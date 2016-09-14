@@ -1,14 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuception", "Nuception\Nuception.csproj", "{6CA7A4D4-C592-4C2D-8F59-FC58DB4F0C09}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{97D1B01C-CD4D-4329-AE72-13C450030A09}"
 	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		CHANGELOG.md = CHANGELOG.md
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuceptionEx", "NuceptionEx\NuceptionEx.csproj", "{8E355926-7F1E-46A8-B1A9-FA0B7DE06034}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +24,10 @@ Global
 		{6CA7A4D4-C592-4C2D-8F59-FC58DB4F0C09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CA7A4D4-C592-4C2D-8F59-FC58DB4F0C09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CA7A4D4-C592-4C2D-8F59-FC58DB4F0C09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E355926-7F1E-46A8-B1A9-FA0B7DE06034}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E355926-7F1E-46A8-B1A9-FA0B7DE06034}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E355926-7F1E-46A8-B1A9-FA0B7DE06034}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E355926-7F1E-46A8-B1A9-FA0B7DE06034}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
