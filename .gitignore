@@ -5,3 +5,4 @@ Nuception/obj/*
 Nuception/bin/*
 *.user
 /_ReSharper.Nuception
+/.vs/config/applicationhost.config
