@@ -3,7 +3,7 @@
   <Metadata>
     <Identity Id="7f6457c8-3317-40fc-92c5-131837831f23" Version="1.0" Language="en-US" Publisher="Clint Parker" />
     <DisplayName>NuceptionEx</DisplayName>
-    <Description>Empty VSIX Project.</Description>
+    <Description>A NuGet (and now a VS extension) package to help make NuGet packages.</Description>
     <License>Resources\LICENSE</License>
     <Icon>Resources\Icon.png</Icon>
     <PreviewImage>Resources\Preview.png</PreviewImage>
