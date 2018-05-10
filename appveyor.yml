@@ -1,3 +1,4 @@
+#https://help.appveyor.com/discussions/questions/4148-why-does-appveyor-seem-not-to-pick-up-my-appveyoryml
 version: 1.0.{build}
 image: Visual Studio 2017
 install:
