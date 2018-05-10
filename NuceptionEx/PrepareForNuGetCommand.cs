@@ -45,16 +45,9 @@ namespace NuceptionEx
         /// <param name="package">Owner package, not null.</param>
         private PrepareForNuGetCommand(Package package)
         {
-            if (package == null)
-            {
-                throw new ArgumentNullException("package");
-            }
+            this.package = package ?? throw new ArgumentNullException("package");
 
-            this.package = package;
-
-            OleMenuCommandService commandService =
-                this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if (commandService != null)
+            if (this.ServiceProvider.GetService(typeof(IMenuCommandService)) is OleMenuCommandService commandService)
             {
                 var menuCommandID = new CommandID(CommandSet, CommandId);
                 var menuItem = new MenuCommand(this.MenuItemCallback, menuCommandID);
@@ -115,25 +108,55 @@ namespace NuceptionEx
             //Add tools & content
             var dirs = Directory.EnumerateDirectories(nugetResourcesPath);
 
-            foreach (var newDir in dirs.Select(dir => AddDirectoryToProject(project, dir)))
+            foreach(var dir in dirs)
             {
-                MarkDirectoryAsCopyToOutputRecursive(newDir);
+                var newDir = AddDirectoryToProject(project, dir);
+                if (newDir != null)
+                {
+                    MarkDirectoryAsCopyToOutputRecursive(newDir);
+                }
             }
-
+            
             //Add nuspec
 
             var nuspecPath = Directory.GetFiles(nugetResourcesPath).First(x => x.Contains("nuspec"));
+            var name = $"{project.Name}.nuspec";
+            ProjectItem nuspec;
+            try
+            {
+                nuspec = project.ProjectItems.AddFromFileCopy(nuspecPath);
+                try
+                {
+                    nuspec.Name = name;
 
-            var nuspec = project.ProjectItems.AddFromFileCopy(nuspecPath);
+                    nuspec.Open();
+                    nuspec.Document.ReplaceText("$assemblyname$", project.Properties.Item("AssemblyName").Value.ToString());
+                    MarkFileAsCopyToOutputDirectory(nuspec);
+                    nuspec.Save();
+                    CopyXMLToOutput(project);
+                }
+                catch (System.Runtime.InteropServices.COMException e)
+                {
+                    if (e.Message.Contains($"{name}' already exists") && nuspec != null)
+                    {
+                        nuspec.Delete();
+                    }
+                    else
+                    {
+                        throw;
+                    }
 
-            nuspec.Name = $"{project.Name}.nuspec";
+                }
+            }
+            catch (System.Runtime.InteropServices.COMException e)
+            {
+                if(!e.Message.Contains("already exists"))
+                {
+                    throw;
+                }
+            }
 
-            nuspec.Open();
-            nuspec.Document.ReplaceText("$assemblyname$", project.Properties.Item("AssemblyName").Value.ToString());
-            MarkFileAsCopyToOutputDirectory(nuspec);
-            nuspec.Save();
-            CopyXMLToOutput(project);
-
+            
             project.Save();
         }
 
@@ -143,8 +166,24 @@ namespace NuceptionEx
             {
                 return null;
             }
-            var projectDir = project.ProjectItems.AddFolder(Path.GetFileName(directoryPath));
+            ProjectItem projectDir;
 
+            var shortDir = Path.GetFileName(directoryPath);
+            //TODO fix this
+            try
+            {
+            projectDir = project.ProjectItems.AddFolder(shortDir);
+
+            }catch (System.Runtime.InteropServices.COMException e)
+            {
+                 if (e.Message.Contains($"{shortDir}' already exists"))
+                {
+                    return null;
+                }else
+                {
+                    throw;
+                }
+            }
             // add directories, files & recurse
             AddChildrenToProjectFolder(projectDir, directoryPath);
             return projectDir;
@@ -197,111 +236,11 @@ namespace NuceptionEx
 
         private static void CopyXMLToOutput(Project project)
         {
-            /*
-             #copy XML to output
-$project.ConfigurationManager | Foreach-Object {
-	if ($_.ConfigurationName -match "Release"){
-		$_.Properties.Item("DocumentationFile").Value = $("bin\Release\" + $project.ProjectName + ".xml")
-	}
-}
-             */
             project.ConfigurationManager.Cast<Configuration>()
                 .First(x => x.ConfigurationName.Equals("Release", StringComparison.InvariantCultureIgnoreCase))
                 .Properties.Cast<Property>()
                 .First(x => x.Name.Equals("DocumentationFile"))
                 .Value = $"bin\\Release\\{project.Properties.Item("AssemblyName").Value.ToString()}.xml";
-        }
-    }
-}
-
-/*
- #credit goes to James Roland (http://stackoverflow.com/users/413529/james-roland)
-param($installPath, $toolsPath, $package, $project)
-
-function MarkDirectoryAsCopyToOutputRecursive($item)
-{
-    $item.ProjectItems | ForEach-Object { MarkFileASCopyToOutputDirectory($_) }
-}
-
-function MarkFileASCopyToOutputDirectory($item)
-{
-    Try
-    {
-        Write-Host Try set $item.Name
-        $item.Properties.Item("CopyToOutputDirectory").Value = 1
-    }
-    Catch
-    {
-        Write-Host RecurseOn $item.Name
-        MarkDirectoryAsCopyToOutputRecursive($item)
-    }
-}
-
-#Now mark everything in the a directories as "Copy always"
-MarkDirectoryAsCopyToOutputRecursive($project.ProjectItems.Item("nuget_content"))
-MarkDirectoryAsCopyToOutputRecursive($project.ProjectItems.Item("nuget_tools"))
-
-#rename the xdts (they can't be "xdt" because NuGet will execute them
-$project.ProjectItems.Item("nuget_content").ProjectItems | Foreach-Object {
-	if ($_.Name -match "nugetxdt"){
-		$_.Name = ($_.Name.Replace("nugetxdt","xdt"))
-	}
-}
-
-#copy XML to output
-$project.ConfigurationManager | Foreach-Object {
-	if ($_.ConfigurationName -match "Release"){
-		$_.Properties.Item("DocumentationFile").Value = $("bin\Release\" + $project.ProjectName + ".xml")
-	}
-}
-
-#rename the nuspec file
-$project.ProjectItems | Foreach-Object {
-	if ($_.Name -match "Nuception_Template.nuspec"){
-		$_.Name = ($_.Name.Replace("Nuception_Template",$project.ProjectName));
-		MarkFileASCopyToOutputDirectory($_);
-	}
-}
-
-$dte.ItemOperations.OpenFile($toolsPath + '\README.Nuception.txt')
-
-     */
-
-public static class Extensions
-{
-    private static ProjectItem AddDirectoryToProject(Project project, string directoryPath)
-    {
-        if (!Directory.Exists(directoryPath))
-        {
-            return null;
-        }
-        var projectDir = project.ProjectItems.AddFolder(Path.GetFileName(directoryPath));
-
-        // add directories, files & recurse
-        AddChildrenToProjectFolder(projectDir, directoryPath);
-        return projectDir;
-    }
-
-    private static void AddChildrenToProjectFolder(ProjectItem projectItem, string directoryPath)
-    {
-        if (!Directory.Exists(directoryPath))
-        {
-            return;
-        }
-        // add directories & recurse
-        var childDirs = Directory.EnumerateDirectories(directoryPath);
-
-        foreach (var childDir in childDirs)
-        {
-            var pi = projectItem.ProjectItems.AddFolder(Path.GetFileName(childDir));
-            AddChildrenToProjectFolder(pi, childDir);
-        }
-
-        //add files
-        var childFiles = Directory.EnumerateFiles(directoryPath);
-        foreach (var childFile in childFiles)
-        {
-            projectItem.ProjectItems.AddFromFileCopy(childFile);
         }
     }
 }
